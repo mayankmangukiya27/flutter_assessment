@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:get/get.dart';
+import 'package:interview_project/ApiServices/api_services.dart';
 import 'package:interview_project/AppConfig/app_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:interview_project/Model/food_model.dart';
@@ -20,12 +21,19 @@ class FoodController extends GetxController {
 
   getFoodList() async {
     await FlutterKeychain.get(key: "foodList");
+
+/*    await FlutterKeychain.get(key: "foodList");
     var headers = {'Authorization': appConfig.apiToken};
     var request = http.Request(
         'GET', Uri.parse('${appConfig.baseUrl}${appConfig.businessesApiUrl}'));
     request.headers.addAll(headers);
     var response = await http.Response.fromStream(await request.send());
+    apiStatusCode.value = response.statusCode;*/
+
+    ApiServices apiServices = ApiServices();
+    var response = await apiServices.getFoodList();
     apiStatusCode.value = response.statusCode;
+
     update();
     if (response.statusCode == 200) {
       await FlutterKeychain.put(key: "foodList", value: response.body);
